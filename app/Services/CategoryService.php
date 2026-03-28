@@ -8,7 +8,7 @@ class CategoryService
 {
     public function getAll()
     {
-        return Category::all();
+        return Category::with('subcategories')->get();
     }
 
     public function create(array $data)

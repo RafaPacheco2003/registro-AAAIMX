@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
 use App\Models\Category;
 use App\Services\CategoryService;
 use App\Http\Requests\CategoryRequest;
-
+use App\Http\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -20,26 +18,30 @@ class CategoryController extends Controller
 
     public function index()
     {
-        return $this->service->getAll();
+        $categories = CategoryResource::collection($this->service->getAll());
+        return $this->success($categories, 'Categorias obtenidas exitosamente');
     }
 
     public function store(CategoryRequest $request)
     {
-        return $this->service->create($request->validated());
+        $category = $this->service->create($request->validated());
+        return $this->success(new CategoryResource($category), 'Categoria creada exitosamente', 201);
     }
 
     public function show(Category $category)
     {
-        return $category;
+        return $this->success(new CategoryResource($category->load('subcategories')), 'Categoria obtenida exitosamente');
     }
 
     public function update(CategoryRequest $request, Category $category)
     {
-        return $this->service->update($category, $request->validated());
+        $category = $this->service->update($category, $request->validated());
+        return $this->success(new CategoryResource($category), 'Categoria actualizada exitosamente');
     }
 
     public function destroy(Category $category)
     {
-        return $this->service->delete($category);
+        $this->service->delete($category);
+        return $this->success(null, 'Categoria eliminada exitosamente');
     }
 }
