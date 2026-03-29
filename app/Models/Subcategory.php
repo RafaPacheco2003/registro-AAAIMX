@@ -12,4 +12,8 @@ class Subcategory extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function registers()
+    {
+        return $this->hasMany(Register::class);
+    }
 }
