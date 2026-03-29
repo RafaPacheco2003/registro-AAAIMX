@@ -9,4 +9,5 @@ Route::prefix('v1/roborage')->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('subcategories', SubcategoryController::class);
     Route::apiResource('registers', RegisterController::class);
+    Route::post('test-email', [RegisterController::class, 'sendTestEmail']);
 });

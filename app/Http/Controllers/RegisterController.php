@@ -6,6 +6,8 @@ use App\Services\RegisterService;
 use App\Models\Register;
 use App\Http\Resources\RegisterResource;
 use App\Http\Requests\RegisterRequest;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -43,7 +45,17 @@ class RegisterController extends Controller
 
 
 
-   
+   public function sendTestEmail(Request $request)
+{
+    $request->validate([
+        'to' => 'required|email',
+    ]);
+    Mail::raw('Este es un correo de prueba desde la API de RoboRage.', function ($message) use ($request) {
+        $message->to($request->to)
+                ->subject('Correo de prueba - RoboRage');
+    });
+    return $this->success(null, 'Correo de prueba enviado exitosamente');
+}
 
 
 
