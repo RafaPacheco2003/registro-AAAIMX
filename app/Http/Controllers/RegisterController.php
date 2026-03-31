@@ -8,6 +8,7 @@ use App\Http\Resources\RegisterResource;
 use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
+use Symfony\Component\Mailer\Exception\ExceptionInterface;
 
 class RegisterController extends Controller
 {
@@ -50,15 +51,20 @@ class RegisterController extends Controller
     $request->validate([
         'to' => 'required|email',
     ]);
-    Mail::raw('Este es un correo de prueba desde la API de RoboRage.', function ($message) use ($request) {
-        $message->to($request->to)
+
+    try {
+        Mail::raw('Este es un correo de prueba desde la API de RoboRage.', function ($message) use ($request) {
+            $message->to($request->to)
                 ->subject('Correo de prueba - RoboRage');
-    });
+        });
+    } catch (ExceptionInterface $e) {
+        $message = config('app.debug')
+            ? $e->getMessage()
+            : 'No se pudo enviar el correo. Revisa la configuración MAIL_* en .env.';
+
+        return $this->error($message, 503);
+    }
+
     return $this->success(null, 'Correo de prueba enviado exitosamente');
 }
-
-
-
-
-    //
 }
