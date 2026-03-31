@@ -6,7 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subcategory extends Model
 {
-    protected $fillable = ['name', 'robo', 'price', 'category_id'];
+    protected $fillable = ['name', 'project', 'price', 'category_id'];
+
+    protected function casts(): array
+    {
+        return [
+            'project' => 'integer',
+        ];
+    }
 
     public function category()
     {

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('subcategories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->boolean('robo');
+            $table->integer('project');
             $table->decimal('price', 10, 2);
 
 

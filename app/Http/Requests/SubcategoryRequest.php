@@ -24,7 +24,7 @@ class SubcategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'robo' => 'required|boolean',
+            'project' => 'required|integer',
             'price' => 'required|numeric|min:0',
             'category_id' => 'required|exists:categories,id',
         ];

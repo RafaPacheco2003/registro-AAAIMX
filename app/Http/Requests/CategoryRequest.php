@@ -24,7 +24,7 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'robo' => 'required|boolean'
+            'project' => 'required|integer',
             //
         ];
     }

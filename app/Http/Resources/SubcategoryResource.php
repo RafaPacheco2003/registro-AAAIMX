@@ -12,7 +12,7 @@ class SubcategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'robo' => $this->robo,
+            'project' => $this->project,
             'price' => $this->price,
             'category_id' => $this->category_id,
             'category' => new CategoryResource($this->whenLoaded('category')),
