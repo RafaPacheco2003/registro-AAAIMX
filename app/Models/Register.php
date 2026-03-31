@@ -10,7 +10,8 @@ class Register extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'team_name', 'robot_name', 'education_level', 'institution', 'email',
+        'team_name', 'robot_name', 'education_level', 'institution',
+        'personal_email', 'institutional_email',
         'registration_code', 'amount', 'payment_status', 'payment_date',
         'confirmed_at', 'comments', 'category_id', 'subcategory_id',
     ];

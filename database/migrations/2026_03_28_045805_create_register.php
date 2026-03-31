@@ -22,7 +22,8 @@ return new class extends Migration
             $table->enum('education_level', ['high_school', 'university']);
             $table->string('institution');
 
-            $table->string('email');
+            $table->string('personal_email');
+            $table->string('institutional_email');
 
             $table->string('registration_code')->nullable();
             $table->decimal('amount', 10, 2)->nullable();
