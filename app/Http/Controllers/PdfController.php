@@ -19,7 +19,7 @@ class PdfController extends Controller
 
     public function register(Register $register)
     {
-        $register->load(['category', 'subcategory']);
+        $register->load(['category', 'subcategory', 'teamMembers']);
 
         $pdf = Pdf::loadView('pdf.register', ['register' => $register]);
 

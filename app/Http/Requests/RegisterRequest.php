@@ -22,7 +22,7 @@ class RegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'team_name' => 'required|string|max:255',
             'robot_name' => 'required|string|max:255',
             'education_level' => 'required|in:high_school,university',
@@ -33,5 +33,14 @@ class RegisterRequest extends FormRequest
             'category_id' => 'required|exists:categories,id',
             'subcategory_id' => 'required|exists:subcategories,id',
         ];
+
+        if ($this->isMethod('POST')) {
+            $rules['team_members'] = 'required|array|between:1,4';
+            $rules['team_members.*.name'] = 'required|string|max:255';
+            $rules['team_members.*.personal_email'] = 'required|email|max:255';
+            $rules['team_members.*.institutional_email'] = 'required|email|max:255';
+        }
+
+        return $rules;
     }
 }

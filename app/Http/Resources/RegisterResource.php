@@ -35,7 +35,8 @@ class RegisterResource extends JsonResource
             'category_id' => $this->category_id,
             'subcategory_id' => $this->subcategory_id,
             'category' => new CategoryResource($this->whenLoaded('category')),
-            'subcategory' => new SubcategoryResource($this->whenLoaded('subcategory'))
+            'subcategory' => new SubcategoryResource($this->whenLoaded('subcategory')),
+            'team_members' => TeamMemberResource::collection($this->whenLoaded('teamMembers')),
         ];
     }
 }

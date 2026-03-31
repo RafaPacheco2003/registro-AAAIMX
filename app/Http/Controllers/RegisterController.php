@@ -29,6 +29,7 @@ class RegisterController extends Controller
 }
 
    public function show(Register $register){
+    $register->load(['category', 'subcategory', 'teamMembers']);
     return $this->success(new RegisterResource($register), 'Registro obtenido exitosamente');
    }
 

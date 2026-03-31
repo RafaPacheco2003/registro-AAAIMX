@@ -39,4 +39,8 @@ class Register extends Model
         return $this->belongsTo(Subcategory::class);
 
     }
+
+    public function teamMembers(){
+        return $this->hasMany(TeamMember::class);
+    }
 }

@@ -88,6 +88,19 @@
             <span class="value">{{ $register->comments }}</span>
         </div>
         @endif
+        @if($register->relationLoaded('teamMembers') && $register->teamMembers->isNotEmpty())
+        <div class="row" style="flex-direction: column; align-items: flex-start;">
+            <span class="label" style="width: 100%; margin-bottom: 8px;">Integrantes:</span>
+            <ul style="margin: 0; padding-left: 20px; width: 100%;">
+                @foreach($register->teamMembers as $member)
+                <li style="margin-bottom: 6px;">
+                    <strong>{{ $member->name }}</strong><br>
+                    <span style="color: #666;">{{ $member->personal_email }} · {{ $member->institutional_email }}</span>
+                </li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
 
     <p class="footer">Generado el {{ now()->format('d/m/Y H:i') }}</p>
