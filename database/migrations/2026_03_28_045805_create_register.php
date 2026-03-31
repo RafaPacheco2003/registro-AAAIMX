@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('personal_email');
             $table->string('institutional_email');
 
-            $table->string('registration_code')->nullable();
+            $table->string('registration_code')->unique()->nullable();
             $table->decimal('amount', 10, 2)->nullable();
 
             $table->enum('payment_status', ['pending', 'confirmed', 'rejected'])->default('pending');
