@@ -14,4 +14,17 @@ class MailService{
                 ->subject('Correo de prueba - RoboRage');
         });
     }
+
+
+    public function sendRegistrationPdf(string $to, string $pdfBinary, string $attachmentFilename): void
+    {
+        Mail::raw(
+            'Adjuntamos el comprobante de registro de RoboRage.',
+            function ($message) use ($to, $pdfBinary, $attachmentFilename) {
+                $message->to($to)
+                    ->subject('Comprobante de registro - RoboRage')
+                    ->attachData($pdfBinary, $attachmentFilename, ['mime' => 'application/pdf']);
+            }
+        );
+    }
 }

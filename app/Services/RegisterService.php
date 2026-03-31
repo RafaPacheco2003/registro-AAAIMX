@@ -9,6 +9,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RegisterService{
 
+    public function __construct(
+        protected MailService $mailService,
+    ) {}
+
     public function getAll(){
         return Register::with(['category', 'subcategory', 'teamMembers'])->get();
     }
@@ -27,7 +31,21 @@ class RegisterService{
 
         $filename = "registro-{$register->registration_code}.pdf";
 
-        return Pdf::loadView('pdf.register', ['register' => $register])->download($filename);
+        $pdf = Pdf::loadView('pdf.register', ['register' => $register]);
+        $binary = $pdf->output();
+
+        foreach ($register->teamMembers->sortBy('id') as $member) {
+            $this->mailService->sendRegistrationPdf(
+                $member->personal_email,
+                $binary,
+                $filename
+            );
+        }
+
+        return response($binary, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
     }
 
     /**
