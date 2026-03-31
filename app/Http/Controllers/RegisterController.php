@@ -25,9 +25,8 @@ class RegisterController extends Controller
    }
 
    public function store(RegisterRequest $request){
-    $register = $this->service->create($request->validated());
-    return $this->success(new RegisterResource($register), 'Registro creado exitosamente', 201);
-   }
+    return $this->service->createAndDownloadPdf($request->validated());
+}
 
    public function show(Register $register){
     return $this->success(new RegisterResource($register), 'Registro obtenido exitosamente');
