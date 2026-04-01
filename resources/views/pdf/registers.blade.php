@@ -17,6 +17,7 @@
         }
         .badge-paid { background-color: #27ae60; }
         .badge-pending { background-color: #e67e22; }
+        .badge-rejected { background-color: #c0392b; }
     </style>
 </head>
 <body>
@@ -35,7 +36,7 @@
                 <th>Categoría</th>
                 <th>Subcategoría</th>
                 <th>Código</th>
-                <th>Monto</th>
+                <th>Total a pagar</th>
                 <th>Estado Pago</th>
             </tr>
         </thead>
@@ -51,11 +52,27 @@
                     <td>{{ $register->category->name ?? '—' }}</td>
                     <td>{{ $register->subcategory->name ?? '—' }}</td>
                     <td>{{ $register->registration_code }}</td>
-                    <td>${{ number_format($register->amount, 2) }}</td>
                     <td>
-                        <span class="badge {{ $register->payment_status === 'paid' ? 'badge-paid' : 'badge-pending' }}">
-                            {{ $register->payment_status === 'paid' ? 'Pagado' : 'Pendiente' }}
-                        </span>
+                        ${{ number_format((float) ($register->payablePrice() ?? 0), 2) }}
+                        @if($register->has_discount === true)
+                            <span style="color:#666;font-size:10px;"> (50% dto.)</span>
+                        @endif
+                    </td>
+                    <td>
+                        @php
+                            $ps = $register->payment_status;
+                            $badgeClass = match ($ps) {
+                                'confirmed' => 'badge-paid',
+                                'rejected' => 'badge-rejected',
+                                default => 'badge-pending',
+                            };
+                            $badgeLabel = match ($ps) {
+                                'confirmed' => 'Confirmado',
+                                'rejected' => 'Rechazado',
+                                default => 'Pendiente',
+                            };
+                        @endphp
+                        <span class="badge {{ $badgeClass }}">{{ $badgeLabel }}</span>
                     </td>
                 </tr>
             @empty

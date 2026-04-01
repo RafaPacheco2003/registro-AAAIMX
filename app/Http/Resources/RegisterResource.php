@@ -26,8 +26,10 @@ class RegisterResource extends JsonResource
             'registration_code' => $this->registration_code,
             'personal_email' => $this->personal_email,
             'institutional_email' => $this->institutional_email,
-            'amount' => $this->amount,
-            
+            'price' => $this->price,
+            'payable_price' => $this->payablePrice(),
+            'has_discount' => $this->has_discount,
+
             'payment_status' => $this->payment_status,
             'payment_date' => $this->payment_date,
             'confirmed_at' => $this->confirmed_at,

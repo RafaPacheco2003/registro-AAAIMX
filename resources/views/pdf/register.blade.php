@@ -20,6 +20,7 @@
         }
         .badge-paid { background-color: #27ae60; }
         .badge-pending { background-color: #e67e22; }
+        .badge-rejected { background-color: #c0392b; }
         .footer { text-align: center; color: #999; font-size: 10px; margin-top: 40px; }
     </style>
 </head>
@@ -64,22 +65,54 @@
             <span class="label">Subcategoría:</span>
             <span class="value">{{ $register->subcategory->name ?? '—' }}</span>
         </div>
+        @if($register->has_discount === true)
         <div class="row">
-            <span class="label">Monto:</span>
-            <span class="value">${{ number_format($register->amount, 2) }}</span>
+            <span class="label">Precio lista:</span>
+            <span class="value">${{ number_format((float) ($register->price ?? 0), 2) }}</span>
         </div>
+        <div class="row">
+            <span class="label">Descuento:</span>
+            <span class="value">50%</span>
+        </div>
+        <div class="row">
+            <span class="label">Total a pagar:</span>
+            <span class="value">${{ number_format((float) ($register->payablePrice() ?? 0), 2) }}</span>
+        </div>
+        @else
+        <div class="row">
+            <span class="label">Total a pagar:</span>
+            <span class="value">${{ number_format((float) ($register->payablePrice() ?? 0), 2) }}</span>
+        </div>
+        @endif
         <div class="row">
             <span class="label">Estado de Pago:</span>
             <span class="value">
-                <span class="badge {{ $register->payment_status === 'paid' ? 'badge-paid' : 'badge-pending' }}">
-                    {{ $register->payment_status === 'paid' ? 'Pagado' : 'Pendiente' }}
-                </span>
+                @php
+                    $ps = $register->payment_status;
+                    $badgeClass = match ($ps) {
+                        'confirmed' => 'badge-paid',
+                        'rejected' => 'badge-rejected',
+                        default => 'badge-pending',
+                    };
+                    $badgeLabel = match ($ps) {
+                        'confirmed' => 'Confirmado',
+                        'rejected' => 'Rechazado',
+                        default => 'Pendiente',
+                    };
+                @endphp
+                <span class="badge {{ $badgeClass }}">{{ $badgeLabel }}</span>
             </span>
         </div>
         @if($register->payment_date)
         <div class="row">
-            <span class="label">Fecha de Pago:</span>
+            <span class="label">Fecha límite de pago:</span>
             <span class="value">{{ $register->payment_date }}</span>
+        </div>
+        @endif
+        @if($register->confirmed_at)
+        <div class="row">
+            <span class="label">Confirmado el:</span>
+            <span class="value">{{ $register->confirmed_at }}</span>
         </div>
         @endif
         @if($register->comments)

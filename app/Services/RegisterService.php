@@ -4,20 +4,48 @@ namespace App\Services;
 
 use App\Models\Register;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
-class RegisterService{
-
+class RegisterService
+{
     public function __construct(
         protected MailService $mailService,
     ) {}
 
-    public function getAll(){
-        return Register::with(['category', 'subcategory', 'teamMembers'])->get();
+    /**
+     * @param  array<string, mixed>  $filters
+     * @return Collection<int, Register>
+     */
+    public function getAll(array $filters = [])
+    {
+        $query = Register::with(['category', 'subcategory', 'teamMembers']);
+
+        if (! empty($filters['payment_status'])) {
+            $query->where('payment_status', $filters['payment_status']);
+        }
+
+        if (! empty($filters['registration_code'])) {
+            $term = addcslashes((string) $filters['registration_code'], '%_\\');
+            $query->where('registration_code', 'like', '%'.$term.'%');
+        }
+
+        if (! empty($filters['team_name'])) {
+            $term = addcslashes((string) $filters['team_name'], '%_\\');
+            $query->where('team_name', 'like', '%'.$term.'%');
+        }
+
+        if (! empty($filters['robot_name'])) {
+            $term = addcslashes((string) $filters['robot_name'], '%_\\');
+            $query->where('robot_name', 'like', '%'.$term.'%');
+        }
+
+        return $query->orderByDesc('id')->get();
     }
 
-    public function create (array $data){
+    public function create(array $data)
+    {
         if (array_key_exists('team_members', $data)) {
             return $this->persistRegisterWithTeamMembers($data);
         }
@@ -67,14 +95,16 @@ class RegisterService{
         });
     }
 
-    public function update (Register $register, array $data){
+    public function update(Register $register, array $data)
+    {
         unset($data['team_members']);
         $register->update($data);
 
         return $register->fresh(['category', 'subcategory', 'teamMembers']);
     }
 
-    public function delete (Register $register){
+    public function delete(Register $register)
+    {
         return $register->delete();
     }
 }

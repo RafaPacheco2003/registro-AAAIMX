@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('register', function (Blueprint $table) {
             $table->id();
 
-
             $table->string('team_name');
             $table->string('robot_name');
-
 
             $table->enum('education_level', ['high_school', 'university']);
             $table->string('institution');
@@ -26,7 +24,7 @@ return new class extends Migration
             $table->string('institutional_email');
 
             $table->string('registration_code')->unique()->nullable();
-            $table->decimal('amount', 10, 2)->nullable();
+            $table->decimal('price', 10, 2)->nullable();
 
             $table->enum('payment_status', ['pending', 'confirmed', 'rejected'])->default('pending');
             $table->date('payment_date')->nullable();
@@ -34,10 +32,8 @@ return new class extends Migration
 
             $table->string('comments')->nullable();
 
-
             $table->foreignId('category_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignId('subcategory_id')->constrained('subcategories')->cascadeOnDelete();
-
 
         });
     }
